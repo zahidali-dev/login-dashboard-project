@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard</title>
+  <style>
+    :root{
+      --box-max: 260px;
+      --accent: #00e6ff;
+      --bg-accent: rgba(14,239,255,0.06);
+      --overlay-behind: 0;
+    }
+
+    /* Put the page tint behind main content */
+    body::before {
+      z-index: var(--overlay-behind) !important;
+      pointer-events: none;
+    }
+
+    /* Raise the visible content above the overlay */
+    h1, p, .image-section, .image-section .image-box, button {
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Ensure the image itself sits above the decorative ring */
+    .image-section .image-box img {
+      position: relative;
+      z-index: 3;
+    }
+    /* Overlay that tints the page when the image box is hovered.
+      Uses :has() where supported and a CSS class fallback for JS toggling. */
+    body::before{
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity .32s ease, transform .36s ease;
+      background:
+       radial-gradient(circle at 50% 24%, rgba(0,230,255,0.18) 0%, rgba(0,230,255,0.08) 20%, transparent 50%),
+       linear-gradient(135deg, rgba(0,0,0,0.18), rgba(0,0,0,0.48));
+      backdrop-filter: blur(6px) saturate(1.05);
+      mix-blend-mode: screen;
+      z-index: 999; /* sits above page but is semi-transparent so content remains visible */
+    }
+
+    /* Activate overlay when hovering the image box (modern browsers with :has) */
+    body:has(.image-section .image-box:hover)::before{
+      opacity: 1;
+      transform: scale(1.01);
+    }
+
+    /* Fallback: apply the same effect when JS adds .hover-overlay to <body> */
+    body.hover-overlay::before{
+      opacity: 1;
+      transform: scale(1.01);
+    }
+    /* Page */
+    body {
+      background: linear-gradient(135deg, #001f3f, #000);
+      color: #b0ffff;
+      font-family: "Poppins", sans-serif;
+      text-align: center;
+      min-height: 100vh;
+      --box-max: 180px; /* smaller image box so image fits on one page */
+      padding-top: 60px; /* reduce top spacing so more content is visible */
+      overflow-y: auto;
+      animation: bgMove 10s infinite alternate ease-in-out;
+      background-size: 400% 400%;
+      transition: background .6s ease;
+    }
+
+    /* Make image box explicitly interactive and add click motion */
+    .image-section .image-box {
+      cursor: pointer;
+      will-change: transform, box-shadow, filter;
+      transition: transform .35s ease, box-shadow .35s ease, border-color .25s ease;
+      /* keep existing visual baseline; hover/active will enhance */
+    }
+
+    /* Hover enhancement (works together with later hover rules) */
+    .image-section .image-box:hover {
+      transform: translateY(-10px) scale(1.04);
+      box-shadow: 0 18px 50px rgba(0,230,255,0.08), 0 8px 30px rgba(0,0,0,0.5);
+    }
+
+    /* Quick motion when the box is clicked (mouse down / touch) */
+    .image-section .image-box:active {
+      animation: clickMotion .52s cubic-bezier(.2,.9,.3,1) forwards;
+      box-shadow: 0 22px 70px rgba(0,230,255,0.12), 0 10px 30px rgba(0,0,0,0.55);
+    }
+
+    /* For keyboard activation or JS-toggle use .clicked */
+    .image-section .image-box.clicked {
+      animation: clickMotion .52s cubic-bezier(.2,.9,.3,1) forwards;
+    }
+
+    @keyframes clickMotion {
+      0%   { transform: translateY(0) scale(1) rotate(0deg); }
+      45%  { transform: translateY(-18px) scale(1.08) rotate(-2deg); }
+      75%  { transform: translateY(-10px) scale(1.04) rotate(-1deg); }
+      100% { transform: translateY(-12px) scale(1.03) rotate(-1deg); }
+    }
+
+    @keyframes bgMove {
+      0% { background-position: left; }
+      100% { background-position: right; }
+    }
+
+    h1 {
+      font-size: 2.8em;
+      color: #0ef;
+      text-shadow: 0 0 20px #0ef, 0 0 40px #0ef;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeIn 1s forwards;
+    }
+
+    p {
+      color: #b0ffff;
+      font-size: 1.2em;
+      margin-top: 10px;
+      opacity: 0;
+      animation: fadeInText 3s forwards;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInText {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    /* Button */
+    button {
+      background: #0ef;
+      color: #000;
+      border: none;
+      padding: 12px 28px;
+      font-size: 18px;
+      border-radius: 30px;
+      cursor: pointer;
+      margin: 40px auto;
+      box-shadow: 0 0 20px #0ef, 0 0 60px #0ef;
+      transition: 0.3s;
+      opacity: 0;
+      animation: fadeInButton 4s forwards;
+      display: block;
+    }
+
+    button:hover {
+      background: #00ffaa;
+      box-shadow: 0 0 40px #00ffaa, 0 0 80px #00ffaa;
+      transform: scale(1.05);
+    }
+
+    @keyframes fadeInButton {
+      to { opacity: 1; }
+    }
+
+    /* Typing animation */
+    .typing {
+      border-right: 2px solid #0ef;
+      display: inline-block;
+      white-space: nowrap;
+      overflow: hidden;
+      width: 0;
+      animation: typing 3.5s steps(40, end) forwards, blink 0.8s infinite;
+    }
+
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 28ch; }
+    }
+
+    @keyframes blink {
+      50% { border-color: transparent; }
+    }
+
+    /* === Image Section (single, clear implementation) === */
+    .image-section {
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    .image-section h2 {
+      color: var(--accent);
+      text-shadow: 0 0 10px var(--accent);
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+    }
+
+    /* The image box will size to the image up to a max width, preserving aspect ratio.
+       This prevents the box from unnaturally growing while keeping a consistent professional look. */
+    .image-section .image-box {
+      position: relative;
+      display: inline-block;
+      max-width: var(--box-max);
+      width: 100%;
+      width: -moz-fit-content;
+      width: fit-content;
+      padding: 10px; /* space for decorative border */
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(14,239,255,0.04), rgba(0,0,0,0.06));
+      overflow: hidden;
+      transition: transform .35s ease, box-shadow .35s ease, border-color .25s ease;
+      border: 2px solid rgba(14,239,255,0.12);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.45);
+      background-clip: padding-box;
+    }
+
+    /* Decorative animated gradient ring using pseudo-element */
+    .image-section .image-box::after{
+      content: "";
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+      border-radius: 22px;
+      padding: 2px;
+      background: conic-gradient(from 180deg at 50% 50%, rgba(14,239,255,0.15), rgba(0,255,170,0.08), rgba(14,239,255,0.15));
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0.65;
+      transition: opacity .3s ease, transform .35s ease, filter .35s ease;
+      z-index: 1;
+    }
+
+    /* Image keeps natural aspect ratio and will never be stretched beyond its natural size; it fills the box width. */
+    .image-section .image-box img{
+      position: relative;
+      z-index: 2;
+      display: block;
+      width: 100%;
+      height: auto;
+      object-fit: contain; /* show whole image without cropping */
+      background: rgba(0,0,0,0.06);
+      border-radius: 12px;
+      transition: transform .45s cubic-bezier(.2,.9,.3,1), filter .45s ease;
+      box-shadow: inset 0 4px 12px rgba(0,0,0,0.45);
+    }
+
+    /* Hover: lift, stronger glow, reveal animated border */
+    .image-section .image-box:hover{
+      transform: translateY(-8px) scale(1.03);
+      border-color: rgba(0,230,255,0.95);
+      box-shadow: 0 18px 50px rgba(0,230,255,0.08), 0 8px 30px rgba(0,0,0,0.5);
+    }
+    .image-section .image-box:hover::after{
+      opacity: 1;
+      transform: scale(1.02);
+      filter: blur(6px) saturate(1.1);
+    }
+    .image-section .image-box:hover img{
+      transform: scale(1.02) translateY(-3px);
+      filter: saturate(1.08) contrast(1.02);
+    }
+
+    @media (max-width: 480px){
+      :root { --box-max: 180px; }
+      body { padding-top: 60px; }
+      h1 { font-size: 1.8rem; }
+    }
+
+    /* Subtle pulse for the whole box border (kept but toned down) */
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 15px var(--accent), 0 0 30px var(--accent); }
+      50% { box-shadow: 0 0 24px var(--accent), 0 0 48px var(--accent); }
+      100% { box-shadow: 0 0 15px var(--accent), 0 0 30px var(--accent); }
+    }
+  </style>
+</head>
+
+<body>
+  <h1 id="welcomeText">👋 Welcome, Guest!</h1>
+  <p><span class="typing">Building the future, one line of code at a time 🚀</span></p>
+
+  <div class="image-section">
+    <h2>My Image</h2>
+    <div class="image-box">
+      <img src="./images/zam.png" alt="Zahid Image" />
+    </div>
+  </div>
+
+  <button id="logoutBtn">Logout</button>
+
+  <script>
+    // Show username
+    setTimeout(() => {
+      const username = localStorage.getItem('rememberedUsername') || 'Guest';
+      document.getElementById('welcomeText').textContent = `👋 Welcome, ${username}!`;
+    }, 500);
+
+    // Logout action
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('rememberedUsername');
+      window.location.href = 'login.html';
+    });
+  </script>
+</body>
+</html>
