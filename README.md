@@ -21,10 +21,9 @@ This project demonstrates form validation, navigation, and responsive UI — per
 - **CSS3 (Flexbox & Grid)**
 - **Vanilla JavaScript (ES6)**
 
----
 
-## 🎥 Demo Video
-## 🎥 Demo Video  
+
+ 
 ## 🎥 Demo Video  
 [Watch Demo on LinkedIn](https://www.linkedin.com/posts/zahid-ali-499612344_html-css-javascript-activity-7394833690599784449-gvT-)
 
@@ -34,7 +33,6 @@ Try the live project here: [Login & Dashboard Demo](https://zahidali-dev.github.
 
 
 
-## 🚀 How to Run
 ## 🚀 How to Run
 1. Download or clone this repository:
    ```bash
