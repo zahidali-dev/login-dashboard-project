@@ -29,8 +29,8 @@ This project demonstrates form validation, navigation, and responsive UI — per
 [Watch Demo on LinkedIn](https://www.linkedin.com/posts/zahid-ali-499612344_html-css-javascript-activity-7394833690599784449-gvT-)
 
 
-## 📸 Screenshots
-*(Optional — you can add screenshots of login and dashboard here)*  
+## 🎥 Live Demo
+Try the live project here: [Login & Dashboard Demo](https://zahidali-dev.github.io/login-dashboard-project/)
 
 
 
